@@ -2,11 +2,12 @@ import os
 import shutil
 import re
 
+
 def get_notes_directory():
     """Возвращает путь к папке 'Daily', находящейся на два уровня выше текущего скрипта."""
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    two_level_up = os.path.dirname(os.path.dirname(script_dir))
+    two_level_up = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
     return os.path.join(two_level_up, "Daily")
+
 
 def move_file_to_month_folder(filename, notes_dir):
     """Перемещает файл в папку, соответствующую месяцу, указанному в имени файла."""
@@ -20,6 +21,7 @@ def move_file_to_month_folder(filename, notes_dir):
 
     print(f"Moved file {filename} to {new_dir}")
 
+
 def main():
     notes_dir = get_notes_directory()
     date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}')
@@ -27,6 +29,7 @@ def main():
     for filename in os.listdir(notes_dir):
         if filename.endswith(".md") and date_pattern.match(filename):
             move_file_to_month_folder(filename, notes_dir)
+
 
 if __name__ == "__main__":
     main()
