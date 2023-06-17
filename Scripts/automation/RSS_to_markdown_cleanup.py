@@ -21,8 +21,10 @@ def process_article_content(content):
             if tag.find('a'):
                 link = tag.a
                 text = tag.get_text()
-                text = text.replace(link.text, f"[{link.text}]({link.get('href')})")
-                text_with_links += text + '\n\n'
+                old_text = f"«{link.text}»"
+                new_text = f"[{link.text}]({link.get('href')})"
+                text = text.replace(old_text, new_text)
+                text_with_links += text + '\n'
             else:
                 text_with_links += tag.text + '\n\n'
 
@@ -64,15 +66,13 @@ def save_article_as_md(entry, save_path):
     tags = [tag.term for tag in entry.get('tags', [])]
 
     # Если теги существуют, преобразуем их в строку, разделенную запятыми
-    tags_line = f"Теги: {', '.join(tags)}\n\n" if tags else ""
+    tags_line = f"tags: [{', '.join(tags)}]\n" if tags else ""
 
     # Создаем файл Markdown с тегами перед контентом
     file_path = category_path / f"{title}.md"
     with file_path.open('w', encoding='utf-8') as f:
-        f.write(f"# {title}\n")
-        f.write(f"> Published on {date}\n")
-        f.write(f"\n{tags_line}---\n")
-        f.write(f"{content}\n")
+        f.write(f"---\n{tags_line}---\n")
+        f.write(f"{content}")
 
 
 # Функция для получения RSS-ленты и сохранения каждой записи файла Markdown
